@@ -11,7 +11,7 @@ import CoreData
 import MediaPlayer
 import AVFoundation
 
-class SongsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,MPMediaPickerControllerDelegate {
+class SongsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,MPMediaPickerControllerDelegate, UITextFieldDelegate {
 
     // MARK: Outlets
     @IBOutlet weak var shuffleSongsLabel: UILabel!
@@ -19,24 +19,89 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var playListTableView: UITableView!
     @IBOutlet weak var playListTitleTextField: UITextField!
     @IBOutlet weak var repeatSongsLabel: UILabel!
-    
-    
+    @IBOutlet weak var repeatSongsSwitch: UISwitch!
     
     // MARK: Properties
     var deviceSongs: [DeviceSong] = [DeviceSong]()
     var songs: [Song] = [Song]()
     var mediaPicker: MPMediaPickerController?
     var myMusicPlayer: MPMusicPlayerController?
+    var playlist: Playlist?
     
     let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
+        setPlaylistSettings()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if self.isMovingFromParentViewController {
+            savePlaylist()
+        }
+    }
+    
+    func setPlaylistSettings () {
+        if playlist == nil {
+            playListTitleTextField.becomeFirstResponder()
+        } else {
+            playListTitleTextField.text = playlist?.title
+            if let repeatSongs = playlist?.shouldRepeatSongs, let shuffleSongs = playlist?.shouldShuffleSongs {
+                repeatSongsSwitch.isOn = repeatSongs
+                shuffleSongsSwitch.isOn = shuffleSongs
+            }
+        }
+    }
+    
+    func savePlaylist() {
+
+        if playlist != nil {
+            // update playlist
+            if var title = playListTitleTextField.text {
+                if title == "" {
+                    title = "My Playlist"
+                }
+                playlist?.title = title
+            } else {
+                playlist?.title = "My Playlist"
+            }
+            playlist?.shouldRepeatSongs = repeatSongsSwitch.isOn
+            playlist?.shouldShuffleSongs = shuffleSongsSwitch.isOn
+            
+        } else {
+            // create a new playlist
+            let newPlaylist = NSEntityDescription.insertNewObject(forEntityName: "Playlist", into: managedObjectContext) as! Playlist
+            newPlaylist.created = NSDate()
+            if var title = playListTitleTextField.text {
+                if title == "" {
+                    title = "My Playlist"
+                }
+                newPlaylist.title = title
+            } else {
+                newPlaylist.title = "My Playlist"
+            }
+            newPlaylist.shouldRepeatSongs = repeatSongsSwitch.isOn
+            newPlaylist.shouldShuffleSongs = shuffleSongsSwitch.isOn
+            self.playlist = newPlaylist
+            
+            var error: NSError? = nil
+            do {
+                try self.managedObjectContext.save()
+            } catch let error1 as NSError {
+                error = error1
+                NSLog("Unresolved error \(String(describing: error?.localizedDescription))), \(error!.userInfo)")
+                abort()
+            }
+        }
     }
 
     // MARK: Actions
     @IBAction func shuffleSongsSwitchTapped(_ sender: UISwitch) {
+        savePlaylist()
     }
     
     @IBAction func addSongTapped(_ sender: Any) {
@@ -44,8 +109,13 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     @IBAction func repeatSongsSwitchTapped(_ sender: UISwitch) {
+        savePlaylist()
     }
 
+    @IBAction func playButtonPressed(_ sender: UIBarButtonItem) {
+        savePlaylist()
+        performSegue(withIdentifier: "gameSegue", sender: self)
+    }
     
     // MARK: MediaPicker
     func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
@@ -109,7 +179,6 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         if let id = persistentID{
             print("Persistent ID = \(id)")
         }
-        
     }
     
 //    func volumeIsChanged(notification: NSNotification){
@@ -150,8 +219,27 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         cell.song = songs[indexPath.row]
         cell.positionLabel.text = String(indexPath.row + 1)
-        
         return cell
+    }
+
+    // MARK: TextField Delegate Methods
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        playListTitleTextField.resignFirstResponder()
+        self.view.endEditing(true)
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "gameSegue" {
+            let destVC = segue.destination as! GameViewController
+            destVC.songs = self.songs
+            destVC.playlist = self.playlist
+                
+            
+        }
     }
 
 }

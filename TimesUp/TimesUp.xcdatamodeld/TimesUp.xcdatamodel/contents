@@ -9,11 +9,13 @@
     </entity>
     <entity name="Playlist" representedClassName="Playlist" syncable="YES" codeGenerationType="class">
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="shouldRepeatSongs" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="shouldShuffleSongs" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="deviceSongs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DeviceSong" inverseName="playlists" inverseEntity="DeviceSong" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Playlist" positionX="-45" positionY="0" width="128" height="88"/>
         <element name="DeviceSong" positionX="117" positionY="-0" width="128" height="118"/>
+        <element name="Playlist" positionX="-45" positionY="0" width="128" height="118"/>
     </elements>
 </model>

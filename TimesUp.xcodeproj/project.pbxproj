@@ -15,13 +15,13 @@
 		750615AF1F427875008A97E3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 750615AD1F427875008A97E3 /* LaunchScreen.storyboard */; };
 		750615BA1F427875008A97E3 /* TimesUpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615B91F427875008A97E3 /* TimesUpTests.swift */; };
 		750615C51F427875008A97E3 /* TimesUpUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615C41F427875008A97E3 /* TimesUpUITests.swift */; };
-		750615D81F4279B0008A97E3 /* MusicLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615D21F4279B0008A97E3 /* MusicLibraryViewController.swift */; };
 		750615D91F4279B0008A97E3 /* PlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615D31F4279B0008A97E3 /* PlaylistsViewController.swift */; };
 		750615DA1F4279B0008A97E3 /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615D41F4279B0008A97E3 /* PlaylistTableViewCell.swift */; };
-		750615DB1F4279B0008A97E3 /* SongQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615D51F4279B0008A97E3 /* SongQuery.swift */; };
 		750615DC1F4279B0008A97E3 /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615D61F4279B0008A97E3 /* SongsViewController.swift */; };
 		750615DD1F4279B0008A97E3 /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615D71F4279B0008A97E3 /* SongTableViewCell.swift */; };
 		750615E31F428719008A97E3 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 750615E21F428719008A97E3 /* Song.swift */; };
+		752ABD3D1F43656F00E44906 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752ABD3C1F43656F00E44906 /* Extensions.swift */; };
+		753E3F351F4360B300303F66 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753E3F341F4360B300303F66 /* GameViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,13 +56,13 @@
 		750615C01F427875008A97E3 /* TimesUpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimesUpUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		750615C41F427875008A97E3 /* TimesUpUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesUpUITests.swift; sourceTree = "<group>"; };
 		750615C61F427875008A97E3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		750615D21F4279B0008A97E3 /* MusicLibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicLibraryViewController.swift; sourceTree = "<group>"; };
 		750615D31F4279B0008A97E3 /* PlaylistsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistsViewController.swift; sourceTree = "<group>"; };
 		750615D41F4279B0008A97E3 /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
-		750615D51F4279B0008A97E3 /* SongQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongQuery.swift; sourceTree = "<group>"; };
 		750615D61F4279B0008A97E3 /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongsViewController.swift; sourceTree = "<group>"; };
 		750615D71F4279B0008A97E3 /* SongTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
 		750615E21F428719008A97E3 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		752ABD3C1F43656F00E44906 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		753E3F341F4360B300303F66 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				750615A11F427875008A97E3 /* AppDelegate.swift */,
+				752ABD3C1F43656F00E44906 /* Extensions.swift */,
 				750615E11F4279E6008A97E3 /* Controller */,
 				750615E01F4279DB008A97E3 /* Views */,
 				750615DF1F4279D3008A97E3 /* Model */,
@@ -171,9 +172,8 @@
 		750615E11F4279E6008A97E3 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				750615D21F4279B0008A97E3 /* MusicLibraryViewController.swift */,
 				750615D31F4279B0008A97E3 /* PlaylistsViewController.swift */,
-				750615D51F4279B0008A97E3 /* SongQuery.swift */,
+				753E3F341F4360B300303F66 /* GameViewController.swift */,
 				750615D61F4279B0008A97E3 /* SongsViewController.swift */,
 				750615A31F427875008A97E3 /* ViewController.swift */,
 				750615DE1F4279B8008A97E3 /* TableViewCells */,
@@ -319,15 +319,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				750615D91F4279B0008A97E3 /* PlaylistsViewController.swift in Sources */,
-				750615D81F4279B0008A97E3 /* MusicLibraryViewController.swift in Sources */,
 				750615A41F427875008A97E3 /* ViewController.swift in Sources */,
 				750615AA1F427875008A97E3 /* TimesUp.xcdatamodeld in Sources */,
 				750615E31F428719008A97E3 /* Song.swift in Sources */,
 				750615A21F427875008A97E3 /* AppDelegate.swift in Sources */,
+				752ABD3D1F43656F00E44906 /* Extensions.swift in Sources */,
 				750615DC1F4279B0008A97E3 /* SongsViewController.swift in Sources */,
 				750615DD1F4279B0008A97E3 /* SongTableViewCell.swift in Sources */,
 				750615DA1F4279B0008A97E3 /* PlaylistTableViewCell.swift in Sources */,
-				750615DB1F4279B0008A97E3 /* SongQuery.swift in Sources */,
+				753E3F351F4360B300303F66 /* GameViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -580,6 +580,7 @@
 				750615CB1F427875008A97E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		750615CC1F427875008A97E3 /* Build configuration list for PBXNativeTarget "TimesUpTests" */ = {
 			isa = XCConfigurationList;
@@ -588,6 +589,7 @@
 				750615CE1F427875008A97E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		750615CF1F427875008A97E3 /* Build configuration list for PBXNativeTarget "TimesUpUITests" */ = {
 			isa = XCConfigurationList;
@@ -596,6 +598,7 @@
 				750615D11F427875008A97E3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

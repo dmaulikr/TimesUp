@@ -14,11 +14,13 @@ struct Song {
     var artist: String?
     var length: Double?
     var created: Date?
+    var mediaItem: MPMediaItem?
     
     init(item: MPMediaItem) {
         title = item.title
         artist = item.artist
         length = item.playbackDuration
         created = Date()
+        mediaItem = item
     }
 }

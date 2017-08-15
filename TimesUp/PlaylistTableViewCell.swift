@@ -13,6 +13,16 @@ class PlaylistTableViewCell: UITableViewCell {
     @IBOutlet weak var numberOfSongsLabel: UILabel!
     @IBOutlet weak var playListTitleLabel: UILabel!
     
+    var playlist: Playlist? {
+        didSet {
+            playListTitleLabel.text = playlist?.title
+            if let songsCount = playlist?.deviceSongs?.count {
+                numberOfSongsLabel.text = "\(String(describing: songsCount)) songs"
+            }
+            
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

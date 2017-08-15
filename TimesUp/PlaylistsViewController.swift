@@ -24,11 +24,54 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setupNavBar()
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        loadPlaylistsAndReloadTable()
+    }
     
-    func loadPlaylists() {
+    func setupNavBar() {
         
+        let navBar = self.navigationController?.navigationBar
+        navBar?.barStyle = .blackTranslucent
+//        self.navigationController?.navigationBar.isTranslucent = true
+//        self.navigationController?.navigationBar.barTintColor = UIColor.black
+//        navigationController?.navigationBar.tintColor = UIColor.white
+        
+//        let addItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: nil, action: #selector(addNewPlaylist))
+//        addItem.tintColor = UIColor.white
+//        self.navigationItem.rightBarButtonItem = addItem
+        
+        
+        
+//        let screenSize: CGRect = UIScreen.main.bounds
+//        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: 44))
+//        let navItem = UINavigationItem(title: "")
+//        let doneItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: nil, action: #selector(done))
+//        navItem.rightBarButtonItem = doneItem
+//        navBar.setItems([navItem], animated: false)
+//        self.view.addSubview(navBar)
+    }
+    
+    func addNewPlaylist() {
+        performSegue(withIdentifier: "newPlaylistSegue", sender: self)
+    }
+
+    
+    func loadPlaylistsAndReloadTable() {
+        let entityDescription = NSEntityDescription.entity(forEntityName: "Playlist", in: managedObjectContext)
+        let request = NSFetchRequest<NSFetchRequestResult>()
+        request.entity = entityDescription
+        let sortDescriptors = NSSortDescriptor(key: "created", ascending: false)
+        request.sortDescriptors = [sortDescriptors]
+        playlists = try! managedObjectContext.fetch(request) as! [Playlist]
+        playListTableView.reloadData()
+    }
+    
+    // MARK: Tableview Methods
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 72
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -38,12 +81,42 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
+        cell.playlist = playlists[indexPath.row] // properties will be set in didSet method on tableviewCell
         
         return cell
     }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.delete) {
+            // handle delete (by removing the data from your array and updating the tableview)
+            let playlist = playlists[indexPath.row]
+            managedObjectContext.delete(playlist)
+            
+            do {
+                try managedObjectContext.save()
+            } catch let error as NSError {
+                print("Error While Deleting Note: \(error.userInfo)")
+            }
+            playlists.remove(at: indexPath.row)
+            playListTableView.reloadData()
+        }
+
+    }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "editPlaylistSegue" {
+            let destVC = segue.destination as! SongsViewController
+            if let indexPath = playListTableView.indexPathForSelectedRow {
+                destVC.playlist = playlists[indexPath.row]
+            }
+        }
+
+    }
     
     // sample loading from coredata
 //    func loadScores() {
@@ -62,129 +135,6 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
 //        score = scores[0]
 //    }
     
-    // example of saving to coredata
-//    func createNewScore() {
-//        // calculate new academic score based on gpa and activities
-//        var academicScore = 0.0
-//        var communityScore = 0.0
-//        var healthScore = 0.0
-//        var socialScore = 0.0
-//        
-//        if (person?.weightedGPA)! > 5.0 {
-//            academicScore += 100.0
-//        }
-//        else {
-//            academicScore += 20.0 * (person?.weightedGPA)!
-//        }
-//        if (person?.gpa)! > 4.0 {
-//            academicScore += 100.0
-//        }
-//        else {
-//            academicScore += 25.0 * (person?.gpa)!
-//        }
-//        
-//        // give attendance Bump.  Kids start with 100 point and work down from there
-//        academicScore += 100
-//        academicScore -= 5 * (person?.lates)!
-//        academicScore -= 10 * (person?.absences)!
-//        
-//        loadActivities()
-//        // use activities to change score
-//        for activity in activities {
-//            if activity.category == "Academic" {
-//                academicScore += activity.weight * activity.value
-//            }
-//            if activity.category == "Social" {
-//                socialScore += activity.weight * activity.value
-//            }
-//            if activity.category == "Community" {
-//                communityScore += activity.weight * activity.value
-//            }
-//            if activity.category == "Health" {
-//                healthScore += activity.weight * activity.value
-//            }
-//        }
-//        loadEvents()
-//        // use events to update score
-//        for event in events {
-//            if event.category == "Academic" {
-//                academicScore += event.weight * event.value
-//            }
-//            if event.category == "Social" {
-//                socialScore += event.weight * event.value
-//            }
-//            if event.category == "Community" {
-//                communityScore += event.weight * event.value
-//            }
-//            if event.category == "Health" {
-//                healthScore += event.weight * event.value
-//            }
-//        }
-//        
-//        // add DailyScores to newScore
-//        loadDailyScores()
-//        
-//        // to make sure we get at least 5 daily scores, to make the kids use the app more than once
-//        if dailyScores.count < 5 {
-//            
-//            // give dailyScore category Bump for not doing the negative things.
-//            academicScore += 4.0 * Double(dailyScores.count) //negative phone in class
-//            healthScore += 3.0 * Double(dailyScores.count) // negative fast food
-//            socialScore += 18.0 * Double(dailyScores.count) // negative tv/videogame/phone
-//            communityScore += 10.0 * Double(dailyScores.count) //detention, suspension, litter, talk negative
-//            
-//            for score in dailyScores {
-//                academicScore += score.academicScore
-//                healthScore += score.healthScore
-//                socialScore += score.socialScore
-//                communityScore += score.communityScore
-//            }
-//        }
-//        else {
-//            
-//            // give dailyScore category Bump for not doing the negative things.
-//            academicScore += 20.0 //negative phone in class
-//            healthScore += 15.0 // negative fast food
-//            socialScore += 90.0 // negative tv/videogame/phone
-//            communityScore += 50.0 //detention, suspension, litter, talk negative
-//            
-//            // sum the scores, divide by however many there are (.count) and multiply by 10
-//            var dsAcademic = 0.0
-//            var dsHealth = 0.0
-//            var dsCommunity = 0.0
-//            var dsSocial = 0.0
-//            for score in dailyScores {
-//                dsAcademic += score.academicScore
-//                dsHealth += score.healthScore
-//                dsSocial += score.socialScore
-//                dsCommunity += score.communityScore
-//            }
-//            
-//            academicScore += dsAcademic / Double(dailyScores.count) * 5.0
-//            healthScore += dsHealth / Double(dailyScores.count) * 5.0
-//            socialScore += dsSocial / Double(dailyScores.count) * 5.0
-//            communityScore += dsCommunity / Double(dailyScores.count) * 5.0
-//        }
-//        
-//        let newScore = NSEntityDescription.insertNewObject(forEntityName: "Score", into: managedObjectContext) as! Score
-//        
-//        newScore.created = NSDate()
-//        newScore.person = person
-//        newScore.communityScore = communityScore
-//        newScore.healthScore = healthScore
-//        newScore.socialScore = socialScore
-//        newScore.academicScore = academicScore
-//        newScore.totalScore = academicScore + communityScore + healthScore + socialScore
-//        
-//        var error : NSError? = nil
-//        do {
-//            try self.managedObjectContext.save()
-//        } catch let error1 as NSError {
-//            error = error1
-//            NSLog("Unresolved error \(error), \(error!.userInfo)")
-//            abort()
-//        }
-//    }
 
 
 }

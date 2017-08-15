@@ -30,7 +30,6 @@ class SongTableViewCell: UITableViewCell {
                 } else {
                     secondsAsString = "\(seconds)"
                 }
-                
                 let time = "\(min):\(secondsAsString)"
                 lengthLabel.text = time
             } else {
