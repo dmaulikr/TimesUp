@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Playlist" representedClassName="Playlist" syncable="YES" codeGenerationType="class">
-        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
-    <entity name="Song" representedClassName="Song" syncable="YES" codeGenerationType="class">
+    <entity name="DeviceSong" representedClassName="DeviceSong" syncable="YES" codeGenerationType="class">
         <attribute name="artist" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="length" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Playlist" inverseName="deviceSongs" inverseEntity="Playlist" syncable="YES"/>
+    </entity>
+    <entity name="Playlist" representedClassName="Playlist" syncable="YES" codeGenerationType="class">
+        <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="deviceSongs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DeviceSong" inverseName="playlists" inverseEntity="DeviceSong" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Playlist" positionX="-45" positionY="0" width="128" height="75"/>
-        <element name="Song" positionX="-18" positionY="45" width="128" height="105"/>
+        <element name="Playlist" positionX="-45" positionY="0" width="128" height="88"/>
+        <element name="DeviceSong" positionX="117" positionY="-0" width="128" height="118"/>
     </elements>
 </model>

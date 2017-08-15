@@ -18,12 +18,15 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var shuffleSongsSwitch: UISwitch!
     @IBOutlet weak var playListTableView: UITableView!
     @IBOutlet weak var playListTitleTextField: UITextField!
+    @IBOutlet weak var repeatSongsLabel: UILabel!
+    
+    
     
     // MARK: Properties
+    var deviceSongs: [DeviceSong] = [DeviceSong]()
     var songs: [Song] = [Song]()
     var mediaPicker: MPMediaPickerController?
     var myMusicPlayer: MPMusicPlayerController?
-    
     
     let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -40,14 +43,25 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         displayMediaPicker()
     }
     
+    @IBAction func repeatSongsSwitchTapped(_ sender: UISwitch) {
+    }
+
     
     // MARK: MediaPicker
     func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
-        self.dismiss(animated: true, completion: nil)
+        mediaPicker.dismiss(animated: true, completion: nil)
     }
     
     func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
-        print(mediaItemCollection)
+        print(mediaItemCollection.items)
+        
+        for item in mediaItemCollection.items {
+            let newSong = Song(item: item)
+            songs.append(newSong)
+            
+            playListTableView.reloadData()
+        }
+        mediaPicker.dismiss(animated: true, completion: nil)
     }
     
 //    func mediaPicker(mediaPicker: MPMediaPickerController,
@@ -67,8 +81,6 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
 //        }
 //    }
     
-    
-    
     func displayMediaPicker() {
         mediaPicker = MPMediaPickerController(mediaTypes: .anyAudio)
         
@@ -76,6 +88,8 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             print("Successfully instantiated a media picker")
             picker.delegate = self
+            picker.allowsPickingMultipleItems = true
+            picker.prompt = "Select songs to add to current playlist"
             view.addSubview(picker.view)
             present(picker, animated: true, completion: nil)
             
@@ -90,8 +104,7 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let key = "MPMusicPlayerControllerNowPlayingItemPersistentIDKey"
         
-        let persistentID =
-            notification.userInfo![key] as? NSString
+        let persistentID = notification.userInfo![key] as? NSString
         
         if let id = persistentID{
             print("Persistent ID = \(id)")
@@ -134,6 +147,9 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath) as! SongTableViewCell
+        
+        cell.song = songs[indexPath.row]
+        cell.positionLabel.text = String(indexPath.row + 1)
         
         return cell
     }

@@ -13,6 +13,32 @@ class SongTableViewCell: UITableViewCell {
     @IBOutlet weak var lengthLabel: UILabel!
     @IBOutlet weak var artistLabel: UILabel!
     @IBOutlet weak var songTitleLabel: UILabel!
+    @IBOutlet weak var positionLabel: UILabel!
+    
+    var song: Song? {
+        didSet {
+
+            artistLabel.text = song?.artist
+            songTitleLabel.text = song?.title
+            
+            if let lengthAsDouble = song?.length {
+                let min: Int = Int(lengthAsDouble) / 60
+                let seconds: Int = Int(lengthAsDouble) % 60
+                var secondsAsString = ""
+                if seconds < 10 {
+                    secondsAsString = "0\(seconds)"
+                } else {
+                    secondsAsString = "\(seconds)"
+                }
+                
+                let time = "\(min):\(secondsAsString)"
+                lengthLabel.text = time
+            } else {
+                lengthLabel.text = "Error"
+            }
+            
+        }
+    }
     
     
     override func awakeFromNib() {

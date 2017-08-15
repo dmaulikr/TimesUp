@@ -16,7 +16,7 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     // MARK: Properties
     var playlists: [Playlist] = [Playlist]()
-    var songs: [Song] = [Song]()
+    var songs: [DeviceSong] = [DeviceSong]()
     
     
     let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
