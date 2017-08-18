@@ -26,6 +26,8 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
 
         setupNavBar()
         
+        playListTableView.tableFooterView = UIView() // this tricks the tableview to remove extra cells at the bottom because it thinks it needs to add a footer.
+        playListTableView.layer.cornerRadius = 10.0
     }
     override func viewWillAppear(_ animated: Bool) {
         loadPlaylistsAndReloadTable()
@@ -35,23 +37,6 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let navBar = self.navigationController?.navigationBar
         navBar?.barStyle = .blackTranslucent
-//        self.navigationController?.navigationBar.isTranslucent = true
-//        self.navigationController?.navigationBar.barTintColor = UIColor.black
-//        navigationController?.navigationBar.tintColor = UIColor.white
-        
-//        let addItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.add, target: nil, action: #selector(addNewPlaylist))
-//        addItem.tintColor = UIColor.white
-//        self.navigationItem.rightBarButtonItem = addItem
-        
-        
-        
-//        let screenSize: CGRect = UIScreen.main.bounds
-//        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: screenSize.width, height: 44))
-//        let navItem = UINavigationItem(title: "")
-//        let doneItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: nil, action: #selector(done))
-//        navItem.rightBarButtonItem = doneItem
-//        navBar.setItems([navItem], animated: false)
-//        self.view.addSubview(navBar)
     }
     
     func addNewPlaylist() {
@@ -85,6 +70,7 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playlistCell", for: indexPath) as! PlaylistTableViewCell
         cell.playlist = playlists[indexPath.row] // properties will be set in didSet method on tableviewCell
+//        cell.layer.cornerRadius = 10
         
         return cell
     }

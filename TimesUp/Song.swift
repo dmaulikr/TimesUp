@@ -14,7 +14,9 @@ struct Song {
     var artist: String?
     var length: Double?
     var created: Date?
+    var persistentID: String?
     var mediaItem: MPMediaItem?
+    var position: Int?
     
     init(item: MPMediaItem) {
         title = item.title
@@ -22,5 +24,16 @@ struct Song {
         length = item.playbackDuration
         created = Date()
         mediaItem = item
+        persistentID = "\(item.persistentID)"
+        position = 0
+    }
+    init(deviceSong: DeviceSong) {
+        title = deviceSong.title
+        artist = deviceSong.artist
+        length = deviceSong.length
+        created = deviceSong.created as Date?
+        persistentID = deviceSong.persistentID
+        position = Int(deviceSong.position)
+        
     }
 }

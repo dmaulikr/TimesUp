@@ -4,18 +4,19 @@
         <attribute name="artist" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="length" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="persistentID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="position" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="playlists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Playlist" inverseName="deviceSongs" inverseEntity="Playlist" syncable="YES"/>
+        <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Playlist" inverseName="deviceSongs" inverseEntity="Playlist" syncable="YES"/>
     </entity>
     <entity name="Playlist" representedClassName="Playlist" syncable="YES" codeGenerationType="class">
         <attribute name="created" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="shouldRepeatSongs" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="shouldShuffleSongs" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="deviceSongs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DeviceSong" inverseName="playlists" inverseEntity="DeviceSong" syncable="YES"/>
+        <relationship name="deviceSongs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DeviceSong" inverseName="playlist" inverseEntity="DeviceSong" syncable="YES"/>
     </entity>
     <elements>
-        <element name="DeviceSong" positionX="117" positionY="-0" width="128" height="118"/>
-        <element name="Playlist" positionX="-45" positionY="0" width="128" height="118"/>
+        <element name="DeviceSong" positionX="117" positionY="-0" width="128" height="148"/>
+        <element name="Playlist" positionX="-45" positionY="0" width="128" height="105"/>
     </elements>
 </model>
