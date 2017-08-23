@@ -17,20 +17,44 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: Properties
     var playlists: [Playlist] = [Playlist]()
     var songs: [DeviceSong] = [DeviceSong]()
-    
+    var deck: Deck? // change from string after you create the class and figure out in app purchases
     
     let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    // make this global so that I can make it appear and disappear.
+    lazy var helperLabel: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 350, height: 50))
+        label.font = UIFont(name: "Avenir-Medium", size: 22.0)
+        label.text = "Tap \"+\" to create a new playlist"
+        label.textColor = UIColor.white
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavBar()
+        setupHelperLabel()
         
         playListTableView.tableFooterView = UIView() // this tricks the tableview to remove extra cells at the bottom because it thinks it needs to add a footer.
         playListTableView.layer.cornerRadius = 10.0
     }
     override func viewWillAppear(_ animated: Bool) {
         loadPlaylistsAndReloadTable()
+
+        
+    }
+    
+    func setupHelperLabel() {
+        self.view.addSubview(helperLabel)
+        
+        // Set up constraints: x,y,w,h
+        helperLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        helperLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        helperLabel.heightAnchor.constraint(equalToConstant: 50.0).isActive = true
+        helperLabel.widthAnchor.constraint(equalToConstant: 320.0).isActive = true
     }
     
     func setupNavBar() {
@@ -52,6 +76,12 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
         request.sortDescriptors = [sortDescriptors]
         playlists = try! managedObjectContext.fetch(request) as! [Playlist]
         playListTableView.reloadData()
+//        if playlists.count == 0 {
+//            // display helper label
+//            helperLabel.isHidden = false
+//        } else {
+//            helperLabel.isHidden = true
+//        }
     }
     
     // MARK: Tableview Methods
@@ -90,6 +120,12 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             playlists.remove(at: indexPath.row)
             playListTableView.reloadData()
+//            if playlists.count == 0 {
+//                // display helper label
+//                helperLabel.isHidden = false
+//            } else {
+//                helperLabel.isHidden = true
+//            }
         }
 
     }
@@ -99,6 +135,7 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
             let destVC = segue.destination as! SongsViewController
             if let indexPath = playListTableView.indexPathForSelectedRow {
                 destVC.playlist = playlists[indexPath.row]
+                destVC.deck = deck
             }
         }
 

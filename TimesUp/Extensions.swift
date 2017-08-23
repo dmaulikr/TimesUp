@@ -9,3 +9,18 @@
 import UIKit
 
 
+enum DeckType {
+    case justMusic
+    case movies
+    case sports
+    case mixedBag
+}
+
+extension Array {
+    mutating func shuffle() {
+        for _ in 0..<((count>0) ? (count-1) : 0) {
+            sort { (_,_) in arc4random() < arc4random() }
+        }
+    }
+}
+

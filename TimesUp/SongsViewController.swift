@@ -25,8 +25,9 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     var deviceSongs: [DeviceSong] = [DeviceSong]() // used for CoreData
     var songs: [Song] = [Song]() // used to populate tableview and pass to gameVC.  Consider switching everything to one array so the you dont have to manage and up keep two arrays.
     var mediaPicker: MPMediaPickerController?
-    var myMusicPlayer: MPMusicPlayerController?
+    var musicPlayer: MPMusicPlayerController?
     var playlist: Playlist?
+    var deck: Deck?
     
     let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -35,16 +36,9 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         setPlaylistSettings()
         loadSongsAndReloadTable()
         songsTableView.tableFooterView = UIView() // this tricks the tableview to remove extra cells at the bottom because it thinks it needs to add a footer.
-
-        // round corners of nav bar.  last cell in the tableview gets rounded in cellForRowatIndexpath.
-        let path = UIBezierPath(roundedRect: musicQueueNavBar.bounds, byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], cornerRadii: CGSize(width: 8.0, height: 8.0))
-        let maskLayer = CAShapeLayer()
-        maskLayer.frame = musicQueueNavBar.bounds
-        maskLayer.path = path.cgPath
-        musicQueueNavBar.layer.mask = maskLayer
-        
-        songsTableView.layer.cornerRadius = 8.0
-    
+        roundCorners()
+        // add observer to pause music if app enters backgroun
+        NotificationCenter.default.addObserver(self, selector: #selector(pauseMusic), name: .UIApplicationWillResignActive, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -52,6 +46,23 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         if self.isMovingFromParentViewController {
             savePlaylist()
         }
+        NotificationCenter.default.removeObserver(self)
+        if let player = musicPlayer {
+            player.stop()
+        }
+    }
+    override func viewDidLayoutSubviews() {
+        roundCorners()
+    }
+
+    func roundCorners() {
+        // round corners of nav bar.  last cell in the tableview gets rounded in cellForRowatIndexpath.
+        let path = UIBezierPath(roundedRect: musicQueueNavBar.bounds, byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], cornerRadii: CGSize(width: 8.0, height: 8.0))
+        let maskLayer = CAShapeLayer()
+        maskLayer.frame = musicQueueNavBar.bounds
+        maskLayer.path = path.cgPath
+        musicQueueNavBar.layer.mask = maskLayer
+        songsTableView.layer.cornerRadius = 8.0
     }
     
     func setPlaylistSettings() {
@@ -122,8 +133,66 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         }
     }
+    
+    func setUpMusicPlayerAndPlaySong(song: Song) {
+        musicPlayer = MPMusicPlayerController()
+        var mediaItems: [MPMediaItem] = [MPMediaItem]()
+        if let item = song.mediaItem {
+            mediaItems.append(item)
+        } else {
+            let songQuery = MPMediaQuery.songs()
+            let predicate = MPMediaPropertyPredicate(value: song.persistentID, forProperty: MPMediaItemPropertyPersistentID)
+            songQuery.addFilterPredicate(predicate)
+            if let foundItems = songQuery.items {
+                if foundItems.count == 1 {
+                    mediaItems.append(contentsOf: foundItems)
+                }
+            }
+            let mediaItemCollection = MPMediaItemCollection(items: mediaItems)
+            if let player = musicPlayer {
+                player.setQueue(with: mediaItemCollection)
+                player.prepareToPlay()
+                player.play()
+            }
+        }
+    }
+    func pauseMusic(notification : NSNotification) {
+        if let player = musicPlayer {
+            player.stop()
+        }
+    }
 
     // MARK: Actions
+    @IBAction func playMusicButtonTapped(_ sender: UIButton) {
+    
+        if sender.title(for: UIControlState()) == "Play" {
+            // play Music
+            let song = songs[sender.tag]
+            // if there is a song currently playing, find it and change its button title to play
+            if let myMusicPlayer = musicPlayer, let playingItem = myMusicPlayer.nowPlayingItem {
+                if String(describing: playingItem.persistentID) != song.persistentID {
+                    // find song in songs and change title to play in case it is currently playing
+                    for i in 0..<songs.count {
+                        let songCheck = songs[i]
+                        if songCheck.persistentID == String(describing:playingItem.persistentID) {
+                            let cell = songsTableView.cellForRow(at: IndexPath(row: i, section: 0)) as! SongTableViewCell
+                            cell.playPauseButton.setTitle("Play", for: UIControlState())
+                            break
+                        }
+                    }
+                }
+            }
+            setUpMusicPlayerAndPlaySong(song: song)
+            sender.setTitle("Pause", for: UIControlState())
+        } else {
+            // pause Music
+            if let myMusicPlayer = musicPlayer {
+                myMusicPlayer.pause()
+            }
+            sender.setTitle("Play", for: UIControlState())
+        }
+    }
+    
     @IBAction func shuffleSongsSwitchTapped(_ sender: UISwitch) {
         savePlaylist()
     }
@@ -166,14 +235,14 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     func noSongsInPlaylistAlert() {
         let alert = UIAlertController(title: "You must select at least one song in order to play the game", message: "What would you like to do?", preferredStyle: .alert)
         let useAllSongsAction = UIAlertAction(title: "Play with all songs in library?", style: .default, handler: {action in
-        self.grabAllSongsAndPlay()
+        self.grabAllSongsAndPlayGame()
         })
         let goBackAction = UIAlertAction(title: "Go back and add songs", style: .default, handler: nil)
         alert.addAction(useAllSongsAction)
         alert.addAction(goBackAction)
         present(alert, animated: true, completion: nil)
     }
-    func grabAllSongsAndPlay() {
+    func grabAllSongsAndPlayGame() {
         if let songQueryItems = MPMediaQuery.songs().items {
             let mediaItemCollection = MPMediaItemCollection(items: songQueryItems)
             for item in mediaItemCollection.items {
@@ -257,6 +326,7 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "songCell", for: indexPath) as! SongTableViewCell
         var song = songs[indexPath.row]
         cell.song = song
+        cell.playPauseButton.tag = indexPath.row
         song.position = indexPath.row + 1
         cell.positionLabel.text = String(indexPath.row + 1)
         let deviceSong = deviceSongs[indexPath.row]
@@ -323,6 +393,7 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let destVC = segue.destination as! GameViewController
             destVC.songs = self.songs
             destVC.playlist = self.playlist
+            destVC.deck = deck
                 
             
         }

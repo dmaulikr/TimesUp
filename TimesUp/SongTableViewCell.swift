@@ -14,11 +14,12 @@ class SongTableViewCell: UITableViewCell {
     @IBOutlet weak var artistLabel: UILabel!
     @IBOutlet weak var songTitleLabel: UILabel!
     @IBOutlet weak var positionLabel: UILabel!
+    @IBOutlet weak var playPauseButton: UIButton!
     
     var song: Song? {
         didSet {
-
             artistLabel.text = song?.artist
+
             songTitleLabel.text = song?.title
             
             if let lengthAsDouble = song?.length {
@@ -38,7 +39,11 @@ class SongTableViewCell: UITableViewCell {
             
         }
     }
-    
+    @IBAction func playPauseMusicTapped(_ sender: UIButton) {
+//        if let chosenSong = song {
+//            SongsViewController.setUpMusicPlayerAndPlaySong(<#T##SongsViewController#>)
+//        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
