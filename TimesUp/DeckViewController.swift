@@ -9,7 +9,7 @@
 import UIKit
 import StoreKit
 
-class DeckViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class DeckViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, DeckDetailsVCDelegate {
     
     // MARK: Outlets
     @IBOutlet weak var deckCollectionView: UICollectionView!
@@ -52,25 +52,26 @@ class DeckViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     func loadDecks() {
         
-        moviesItems = ["Movies with animals", "Tom Hank Movies", "Disney Movies", "Will Smith Movies", "Julia Roberts Movies", "Spy movies", "Movies about sports"]
+        moviesItems = ["Movies with animals", "Movies with Tom Hanks", "Disney Movies", "Movies with Will Smith", "Movies with Julia Roberts", "Movies with Matt Damon", "Spy movies", "Movies about sports", "Romantic Comedies", "Movies with car chases", "War movies", "Movies made after books", "Action Movies", "Comedy Movies", "Movies with a sequel", "Movies with Dogs", "Movie Villans", "Horror Movies", "Leonardo DiCaprio Movies", "Black and White Movies", "Movies about a Heist", "Movies with a Wedding", "Holiday Movies" ]
         
-        mixedBagItems = ["Types of Vegetables", "Types of Fruit", "Countries in Europe", "Cartoon Characters", "Foods that are Orange"]
+        mixedBagItems = ["Types of Vegetables", "Types of Fruit", "Countries in Europe", "Cartoon Characters", "Foods that are Orange", "Types of citrus", "Dog Breeds", "Countries in Europe", "States in the US", "Boy names that begin with the letter 'S'", "Girl names that begin with a vowel", "Super Heroes", "Animals you would find on an African Safari", "Boy names that begin with a vowel", "Girl names that begin with the letter 'B'", "Disney Characters", "Names that begin with 'C'", "Social Media websites/apps", "Items you can order at a Mexican Restaurant", "Items you can order at a Chinease Restaurant", "Animals you would find in the ocean", "Types of exercises you can do in the gym"]
         
-        sportsItems = ["NBA Teams", "NFL Teams", "MLB Teams", "NHL Teams", "Types of Sports", "College and Mascot", "Sports Teams with cats as mascots"]
+        sportsItems = ["NBA Teams", "NFL Teams", "MLB Teams", "NHL Teams", "Types of Sports", "College and Mascot", "Sports Teams with cats as mascots", "Profesional Futbol/Soccer teams", "Games you would play in gym class", "Sports Teams with birds as Mascots", "NCAA Basketball March Madness Champions", "NBA Point Gaurds", "NFL Quarterbacks", "NFL Wide Recievers", "NBA Centers", "MLB Pitchers", "NHL Goalies", "MLB Homerun Hitters", "NHL Centers", "College and Mascot", "Profesional Tennis Players", "Profesional Basketball Players", "Profesional Soccer/Futbol players", "Profesional Baseball Players", "Profesional Football Players", "Profesional Hockey Players", "Olympic Events", "Gold Medal Olympians"]
         
         let aboutMovies = "A song will play for a random amount of time between 30 and 60 seconds.  A Movie topic will be displayed on the screen.  Take turns with your group listing items for that topic.  If the music stops on your turn, you lose.  If you are stumped and cannot think of an item for that topic, you can skip the topic for a 5 second penalty.\n\nExample: Topic is 'Movies with animals'\nPlayer 1 says \"Pets\", Player 2 says \"Jaws\", Player 3 says \"Babe\", Player 4 is thinking when the music stops.  Player 4 loses."
         let aboutSports = "A song will play for a random amount of time between 30 and 60 seconds.  A Sports topic will be displayed on the screen.  Take turns with your group listing items for that topic.  If the music stops on your turn, you lose.  If you are stumped and cannot think of an item for that topic, you can skip the topic for a 5 second penalty.\n\nExample: Topic is 'Sports Teams with cats as mascots'\nPlayer 1 says \"Jacksonville Jaguars\", Player 2 says \"Cinci Bengals\", Player 3 says \"Villanova Wildcats\", Player 4 is thinking when the music stops.  Player 4 loses."
         let aboutMixedBag = "A song will play for a random amount of time between 30 and 60 seconds.  A Random topic will be displayed on the screen.  Take turns with your group listing items for that topic.  If the music stops on your turn, you lose.  If you are stumped and cannot think of an item for that topic, you can skip the topic for a 5 second penalty.\n\nExample: Topic is 'Foods that are orange'\nPlayer 1 says \"Chedder Cheese\", Player 2 says \"Carrots\", Player 3 says \"Sweet Potatoes\", Player 4 says \"Orange Juice\", everyone has gone so its Player 1's turn again and Player 1 is thinking when the music stops.  Player 1 loses."
-        let aboutJustMusic = "In this game a song will play for a random amount of time between 30 and 60 seconds.  During that time, your group can play 'Hot Potato' with some soft object in the room, 'Musical Chairs', or many other games that would need a timer and fun music."
+        let aboutJustMusic = "In this game a song will play for a random amount of time between 30 and 60 seconds.  During that time, your group can play 'Hot Potato' with some soft object in the room, 'Musical Chairs', or any other game that would need a timer and fun music."
 
+        let justMusicDeck = Deck(title: "Just Music", items: [""], purchased: true, about: aboutJustMusic)
+        decks.append(justMusicDeck)
         let moviesDeck = Deck(title: "Movies", items: moviesItems, purchased: true, about: aboutMovies)
         decks.append(moviesDeck)
         let sportsDeck = Deck(title: "Sports", items: sportsItems, purchased: true, about: aboutSports)
         decks.append(sportsDeck)
         let mixedBagDeck = Deck(title: "Mixed Bag", items: mixedBagItems, purchased: true, about: aboutMixedBag)
         decks.append(mixedBagDeck)
-        let justMusicDeck = Deck(title: "Just Music", items: [""], purchased: true, about: aboutJustMusic)
-        decks.append(justMusicDeck)
+
     }
     func reloadProducts() {
         products = []
@@ -166,16 +167,27 @@ class DeckViewController: UIViewController, UICollectionViewDelegate, UICollecti
         if indexPath.section == 0 {
             
             selectedDeck = decks[indexPath.row]
-            self.performSegue(withIdentifier: "deckSelectedSegue", sender: self)
+            self.performSegue(withIdentifier: "deckDetailsSegue", sender: self)
         } else {
             let product = products[indexPath.row]
             print("selected product:\(product.localizedDescription)")
         }
     }
     
+    func showPlaylistVC() {
+        if selectedDeck != nil {
+            performSegue(withIdentifier: "deckSelectedSegue", sender: self)
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "deckSelectedSegue" {
+        if segue.identifier == "deckDetailsSegue" {
             let destVC = segue.destination as! DeckDetailVC
+            destVC.deck = selectedDeck
+            destVC.delegate = self
+        }
+        if segue.identifier == "deckSelectedSegue" {
+            let destVC = segue.destination as! PlaylistsViewController
             destVC.deck = selectedDeck
         }
     }

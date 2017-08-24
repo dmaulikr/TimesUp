@@ -8,6 +8,9 @@
 
 import UIKit
 
+protocol DeckDetailsVCDelegate {
+    func showPlaylistVC()
+}
 class DeckDetailVC: UIViewController {
     
     //MARK: Outlets
@@ -17,6 +20,8 @@ class DeckDetailVC: UIViewController {
     @IBOutlet weak var playButton: UIBarButtonItem!
     
     // MARK: Properties
+    var delegate: DeckDetailsVCDelegate?
+    
     var deck: Deck?
     
     lazy var buyButton: UIButton = {
@@ -53,8 +58,8 @@ class DeckDetailVC: UIViewController {
             if myDeck.isPurchased == true {
                 // display play Button
                 playButton.isEnabled = true
-                buyButton.isEnabled = false
-                buyButton.setTitle("Purchased", for: UIControlState())
+                buyButton.isEnabled = true
+                buyButton.setTitle("Play", for: UIControlState())
 //                buyButton.setTitle("Free with App", for: UIControlState())
                 
                 // buy button title should be disabled and read Owner
@@ -68,14 +73,24 @@ class DeckDetailVC: UIViewController {
     }
     @IBAction func playButtonTapped(_ sender: UIBarButtonItem) {
         if deck != nil {
-            performSegue(withIdentifier: "selectPlaylistSegue", sender: self)
+//            performSegue(withIdentifier: "selectPlaylistSegue", sender: self)
+            self.dismiss(animated: true, completion: {action in
+                let presentingVC = self.presentingViewController as! DeckViewController
+                presentingVC.showPlaylistVC()
+            })
         }
     }
     
     func buyButtonTapped() {
-        print("buyButton tapped")
+        if buyButton.title(for: UIControlState()) == "Play" {
+            self.dismiss(animated: true, completion: nil)
+            delegate?.showPlaylistVC()
+        } else {
+            //handle purchasing a deck
+        }
     }
     
+        
     func newBuyButton() -> UIButton {
         let button = UIButton(type: .system)
         button.setTitleColor(UIColor.white, for: .normal)

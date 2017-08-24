@@ -127,6 +127,7 @@ class GameViewController: UIViewController {
             if let currentItem = player.nowPlayingItem {
                 let song = Song(item: currentItem)
                 setLabelsForCurrentSong(song: song)
+                timeLabel.text = "0"
             }
             getRandomNumberAndStartTimer()
 
@@ -216,7 +217,8 @@ class GameViewController: UIViewController {
     func getRandomNumberAndStartTimer() {
         // get a random number between 0 and 10
 //        randomEndTime = Int(arc4random_uniform(30)) + 30 // use for actual game
-        randomEndTime = Int(arc4random_uniform(10)) // use for testing
+        randomEndTime = Int(arc4random_uniform(30))
+//        randomEndTime = Int(arc4random_uniform(10)) // use for testing
         print(randomEndTime)
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimeLabel), userInfo: nil, repeats: true)
     }
@@ -224,10 +226,11 @@ class GameViewController: UIViewController {
     func updateTimeLabel() {
         timeLabel.text = "\(count)"
         count += 1
-        if count == randomEndTime {
-            playEndGame() // play end game sound 1 second before end of game because sound is 1 second long
-        }
+//        if count == randomEndTime {
+//            playEndGame() // play end game sound 1 second before end of game because sound is 1 second long
+//        }
         if count > randomEndTime {
+            playBeep()
             timer?.invalidate()
             count = 1
             if let player = musicPlayer {
@@ -243,7 +246,7 @@ class GameViewController: UIViewController {
         nowPlayingView.isHidden = false
         songTitleLabel.text = song.title
         artistLabel.text = song.artist
-        timeLabel.text = "0"
+//        timeLabel.text = "0"
         nowPlayingLabel.text = "Now Playing:"
     }
     
