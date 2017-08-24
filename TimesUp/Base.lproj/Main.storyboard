@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kLB-7Z-oac">
-                                <rect key="frame" x="16" y="72" width="343" height="587"/>
+                                <rect key="frame" x="16" y="72" width="343" height="486"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="6sV-O2-NyS">
                                     <size key="itemSize" width="150" height="150"/>
@@ -129,21 +129,53 @@
                                     <outlet property="delegate" destination="IvP-Cs-Y7l" id="QWS-wF-Tg6"/>
                                 </connections>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o8z-94-kYb">
+                                <rect key="frame" x="16" y="607" width="343" height="40"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="pDO-cg-gzv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="20"/>
+                                <state key="normal" title="Select Music">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="selectMusicTapped:" destination="IvP-Cs-Y7l" eventType="touchUpInside" id="zGb-ct-j6f"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap below to add music" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="1sg-1d-vnZ">
+                                <rect key="frame" x="16" y="566" width="343" height="33"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="33" id="7Ih-Ed-GOA"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="24"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.4092977464" green="0.73528711930000001" blue="0.43698411500000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="kLB-7Z-oac" firstAttribute="leading" secondItem="IJZ-Ki-QRD" secondAttribute="leading" constant="16" id="AH3-Pd-CIM"/>
-                            <constraint firstAttribute="trailing" secondItem="kLB-7Z-oac" secondAttribute="trailing" constant="16" id="TRY-pV-q0h"/>
-                            <constraint firstItem="kLB-7Z-oac" firstAttribute="top" secondItem="1TJ-iY-rA3" secondAttribute="bottom" constant="8" id="ba2-BI-DiU"/>
-                            <constraint firstItem="KD8-dT-nIq" firstAttribute="top" secondItem="kLB-7Z-oac" secondAttribute="bottom" constant="8" id="fPN-RF-y6a"/>
+                            <constraint firstItem="1sg-1d-vnZ" firstAttribute="trailing" secondItem="IJZ-Ki-QRD" secondAttribute="trailingMargin" id="1gl-nB-f5g"/>
+                            <constraint firstItem="kLB-7Z-oac" firstAttribute="leading" secondItem="IJZ-Ki-QRD" secondAttribute="leadingMargin" id="1lq-Fj-d41"/>
+                            <constraint firstItem="o8z-94-kYb" firstAttribute="top" secondItem="kLB-7Z-oac" secondAttribute="bottom" constant="49" id="2wI-9p-xuu"/>
+                            <constraint firstItem="kLB-7Z-oac" firstAttribute="top" secondItem="1TJ-iY-rA3" secondAttribute="bottom" constant="8" id="7mX-pS-dwz"/>
+                            <constraint firstItem="KD8-dT-nIq" firstAttribute="top" secondItem="o8z-94-kYb" secondAttribute="bottom" constant="20" id="Kkr-Cc-ZRV"/>
+                            <constraint firstItem="o8z-94-kYb" firstAttribute="trailing" secondItem="IJZ-Ki-QRD" secondAttribute="trailingMargin" id="Ysx-8y-TPa"/>
+                            <constraint firstItem="kLB-7Z-oac" firstAttribute="trailing" secondItem="IJZ-Ki-QRD" secondAttribute="trailingMargin" id="ksu-n0-WH9"/>
+                            <constraint firstItem="o8z-94-kYb" firstAttribute="top" secondItem="1sg-1d-vnZ" secondAttribute="bottom" constant="8" id="mBp-NY-Rrc"/>
+                            <constraint firstItem="o8z-94-kYb" firstAttribute="leading" secondItem="IJZ-Ki-QRD" secondAttribute="leadingMargin" id="npS-dj-wzW"/>
+                            <constraint firstItem="1sg-1d-vnZ" firstAttribute="leading" secondItem="IJZ-Ki-QRD" secondAttribute="leadingMargin" id="vgx-sR-tcl"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Times Up!" id="PAV-iz-oM8"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
+                        <outlet property="currentMusicLabel" destination="1sg-1d-vnZ" id="zTJ-0S-RgP"/>
                         <outlet property="deckCollectionView" destination="kLB-7Z-oac" id="aHH-80-qr1"/>
+                        <outlet property="selectMusicButton" destination="o8z-94-kYb" id="6Zn-hS-aLB"/>
                         <segue destination="a06-hQ-ufc" kind="presentation" identifier="deckDetailsSegue" id="C3s-pw-71f"/>
-                        <segue destination="NhG-q6-bym" kind="show" identifier="deckSelectedSegue" id="1Ra-ox-MG2"/>
+                        <segue destination="NhG-q6-bym" kind="show" identifier="selectMusicSegue" id="1Ra-ox-MG2"/>
+                        <segue destination="IPT-s6-riS" kind="show" identifier="playGameSegue" id="wre-ua-fkM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1GS-46-UxO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -188,6 +220,14 @@
                                 <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="23"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gyc-dh-m3V">
+                                <rect key="frame" x="16" y="585" width="120" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="cQW-4m-eIj"/>
+                                    <constraint firstAttribute="height" constant="50" id="iC3-6V-6Bk"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.4092977464" green="0.73528711930000001" blue="0.43698411500000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -201,27 +241,22 @@
                             <constraint firstItem="xRZ-vg-4ct" firstAttribute="trailing" secondItem="Ccq-cK-1Iw" secondAttribute="trailingMargin" id="jkA-yG-Jy6"/>
                             <constraint firstItem="ycr-mN-KHw" firstAttribute="top" secondItem="xRZ-vg-4ct" secondAttribute="bottom" constant="8" id="jls-ya-5qC"/>
                             <constraint firstItem="ygU-Ae-aX2" firstAttribute="leading" secondItem="Ccq-cK-1Iw" secondAttribute="leadingMargin" id="ocL-1k-65z"/>
+                            <constraint firstItem="gyc-dh-m3V" firstAttribute="leading" secondItem="Ccq-cK-1Iw" secondAttribute="leadingMargin" id="olz-if-L5R"/>
+                            <constraint firstItem="JQc-9n-BID" firstAttribute="top" secondItem="gyc-dh-m3V" secondAttribute="bottom" constant="32" id="t7r-HP-1kG"/>
                             <constraint firstItem="ycr-mN-KHw" firstAttribute="trailing" secondItem="Ccq-cK-1Iw" secondAttribute="trailingMargin" id="zfe-rl-wZz"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Deck Details" id="ydH-6r-W4T">
-                        <barButtonItem key="rightBarButtonItem" title="Play" id="RL3-8e-ui1">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="playButtonTapped:" destination="a06-hQ-ufc" id="CfG-u2-W3O"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Deck Details" id="ydH-6r-W4T"/>
                     <connections>
+                        <outlet property="backView" destination="gyc-dh-m3V" id="eEG-yt-rg0"/>
                         <outlet property="bodyTextView" destination="xRZ-vg-4ct" id="YAE-fG-ICh"/>
                         <outlet property="detailView" destination="ycr-mN-KHw" id="SMi-F7-FBk"/>
-                        <outlet property="playButton" destination="RL3-8e-ui1" id="dpH-zo-Ecb"/>
                         <outlet property="titleLabel" destination="ygU-Ae-aX2" id="eyl-eX-k4F"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iTz-KU-Hgo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2816.8000000000002" y="6.746626686656672"/>
+            <point key="canvasLocation" x="2790" y="-315"/>
         </scene>
         <!--Select Playlist-->
         <scene sceneID="6du-or-zeX">
@@ -307,7 +342,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e67-9a-P73" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3673" y="123"/>
+            <point key="canvasLocation" x="2354" y="851"/>
         </scene>
         <!--Songs-->
         <scene sceneID="FOj-Br-lbK">
@@ -493,10 +528,10 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Songs" id="YV9-vQ-BhK">
-                        <barButtonItem key="rightBarButtonItem" title="PLAY" id="ofa-4U-jYc">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="ofa-4U-jYc">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
-                                <action selector="playButtonPressed:" destination="WB7-Ed-B6n" id="knL-3j-G8t"/>
+                                <action selector="saveButtonTapped:" destination="WB7-Ed-B6n" id="HK4-Uy-iX0"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -504,15 +539,15 @@
                         <outlet property="editBarButton" destination="ifA-pw-gdn" id="vlj-Rh-r7n"/>
                         <outlet property="musicQueueNavBar" destination="SaW-g0-0p1" id="Nie-Ys-aNI"/>
                         <outlet property="playListTitleTextField" destination="5bb-n1-CuV" id="m7n-b1-5aT"/>
+                        <outlet property="saveButton" destination="ofa-4U-jYc" id="Yuv-kH-H4H"/>
                         <outlet property="shuffleSongsLabel" destination="qlh-Mq-TSt" id="gCk-Ug-E2g"/>
                         <outlet property="shuffleSongsSwitch" destination="xlU-IC-DaE" id="7Zg-N6-KBO"/>
                         <outlet property="songsTableView" destination="9Nr-FI-P2a" id="8OM-5N-4ac"/>
-                        <segue destination="IPT-s6-riS" kind="show" identifier="gameSegue" id="ONb-qX-9dG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rtE-gF-tyA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4492" y="122.78860569715144"/>
+            <point key="canvasLocation" x="3151" y="851"/>
         </scene>
         <!--Times Up!-->
         <scene sceneID="F6Q-Hh-eSn">
@@ -630,17 +665,9 @@
                             <constraint firstItem="G4g-Ce-Zqg" firstAttribute="trailing" secondItem="J6v-Qh-2w8" secondAttribute="trailingMargin" constant="-8" id="ujW-mR-J0V"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Times Up!" id="EPJ-ie-B2z">
-                        <barButtonItem key="rightBarButtonItem" title="End Game" id="fqu-1L-SyZ">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="endGameTapped:" destination="IPT-s6-riS" id="uC5-jf-h4b"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Times Up!" id="EPJ-ie-B2z"/>
                     <connections>
                         <outlet property="artistLabel" destination="dhy-af-txN" id="i2w-Pm-Vda"/>
-                        <outlet property="endGameButton" destination="fqu-1L-SyZ" id="31i-v8-N1g"/>
                         <outlet property="mainLabel" destination="poj-pW-pUW" id="8m2-jr-UFc"/>
                         <outlet property="nowPlayingLabel" destination="nra-f1-AqJ" id="5kX-EZ-rgR"/>
                         <outlet property="nowPlayingView" destination="G4g-Ce-Zqg" id="FZM-Fd-5to"/>
@@ -651,7 +678,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SAo-tb-Q51" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5256.8000000000002" y="122.78860569715144"/>
+            <point key="canvasLocation" x="3529" y="85"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="mCe-8y-sWm">

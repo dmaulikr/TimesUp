@@ -11,6 +11,10 @@ import CoreData
 import MediaPlayer
 import AVFoundation
 
+protocol SongsVCDelegate {
+    func musicSelected(playlist: Playlist?, songs: [Song])
+}
+
 class SongsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,MPMediaPickerControllerDelegate, UITextFieldDelegate {
 
     // MARK: Outlets
@@ -19,15 +23,16 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var songsTableView: UITableView!
     @IBOutlet weak var playListTitleTextField: UITextField!
     @IBOutlet weak var editBarButton: UIBarButtonItem!
-
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var musicQueueNavBar: UINavigationBar!
+    
     // MARK: Properties
+    var delegate: SongsVCDelegate?
     var deviceSongs: [DeviceSong] = [DeviceSong]() // used for CoreData
     var songs: [Song] = [Song]() // used to populate tableview and pass to gameVC.  Consider switching everything to one array so the you dont have to manage and up keep two arrays.
     var mediaPicker: MPMediaPickerController?
     var musicPlayer: MPMusicPlayerController?
     var playlist: Playlist?
-    var deck: Deck?
     
     let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -223,26 +228,39 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
 
-    @IBAction func playButtonPressed(_ sender: UIBarButtonItem) {
+    @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
         savePlaylist()
         if songs.count > 0 {
-            performSegue(withIdentifier: "gameSegue", sender: self)
+            
+            // figure out how to send data back two vc's
+            navigationController?.popToRootViewController(animated: true)
+            delegate?.musicSelected(playlist: playlist, songs: songs)
+
+            
         } else {
             noSongsInPlaylistAlert()
         }
     }
+//    @IBAction func playButtonPressed(_ sender: UIBarButtonItem) {
+//        savePlaylist()
+//        if songs.count > 0 {
+//            performSegue(withIdentifier: "gameSegue", sender: self)
+//        } else {
+//            noSongsInPlaylistAlert()
+//        }
+//    }
     
     func noSongsInPlaylistAlert() {
         let alert = UIAlertController(title: "You must select at least one song in order to play the game", message: "What would you like to do?", preferredStyle: .alert)
         let useAllSongsAction = UIAlertAction(title: "Play with all songs in library?", style: .default, handler: {action in
-        self.grabAllSongsAndPlayGame()
+        self.grabAllSongsAndDismiss()
         })
         let goBackAction = UIAlertAction(title: "Go back and add songs", style: .default, handler: nil)
         alert.addAction(useAllSongsAction)
         alert.addAction(goBackAction)
         present(alert, animated: true, completion: nil)
     }
-    func grabAllSongsAndPlayGame() {
+    func grabAllSongsAndDismiss() {
         if let songQueryItems = MPMediaQuery.songs().items {
             let mediaItemCollection = MPMediaItemCollection(items: songQueryItems)
             for item in mediaItemCollection.items {
@@ -252,7 +270,8 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             if songs.count > 0 {
                 savePlaylist()
-                performSegue(withIdentifier: "gameSegue", sender: self)
+                navigationController?.popToRootViewController(animated: true)
+                delegate?.musicSelected(playlist: playlist, songs: songs)
             } else {
                 noSongsInLibraryAlert()
             }
@@ -260,7 +279,7 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func noSongsInLibraryAlert() {
-        let alert = UIAlertController(title: "Error", message: "We could not find any songs in your music library.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Error", message: "We could not find any songs in your music library.  You must own at least 1 song in order to play this game.", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
         alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
@@ -388,15 +407,12 @@ class SongsViewController: UIViewController, UITableViewDataSource, UITableViewD
         return true
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "gameSegue" {
-            let destVC = segue.destination as! GameViewController
-            destVC.songs = self.songs
-            destVC.playlist = self.playlist
-            destVC.deck = deck
-                
-            
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "gameSegue" {
+//            let destVC = segue.destination as! GameViewController
+//            destVC.songs = self.songs
+//            destVC.playlist = self.playlist
+//        }
+//    }
 
 }

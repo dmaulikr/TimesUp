@@ -9,7 +9,7 @@
 import UIKit
 
 protocol DeckDetailsVCDelegate {
-    func showPlaylistVC()
+    func playGame()
 }
 class DeckDetailVC: UIViewController {
     
@@ -17,7 +17,8 @@ class DeckDetailVC: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var bodyTextView: UITextView!
     @IBOutlet weak var detailView: UIView!
-    @IBOutlet weak var playButton: UIBarButtonItem!
+    @IBOutlet weak var backView: UIView!
+    
     
     // MARK: Properties
     var delegate: DeckDetailsVCDelegate?
@@ -29,7 +30,20 @@ class DeckDetailVC: UIViewController {
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.textAlignment = .center
         button.setTitle("Buy", for: UIControlState())
+        button.titleLabel?.font = UIFont(name: "Avenir-Medium", size: 17.0)
         button.addTarget(self, action: #selector(buyButtonTapped), for: .touchUpInside)
+        button.layer.frame = CGRect(x: 0, y: 0, width: 120, height: 50)
+        
+        return button
+    }()
+    
+    lazy var backButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.titleLabel?.textAlignment = .center
+        button.setTitle("Go Back", for: UIControlState())
+        button.titleLabel?.font = UIFont(name: "Avenir-Medium", size: 17.0)
+        button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         button.layer.frame = CGRect(x: 0, y: 0, width: 120, height: 50)
         
         return button
@@ -55,59 +69,53 @@ class DeckDetailVC: UIViewController {
             detailView.addSubview(buyButton)
             detailView.layer.cornerRadius = 8.0
             
+            backView.backgroundColor = UIColor.darkGray
+            backView.addSubview(backButton)
+            backView.layer.cornerRadius = 8.0
+            
             if myDeck.isPurchased == true {
-                // display play Button
-                playButton.isEnabled = true
-                buyButton.isEnabled = true
                 buyButton.setTitle("Play", for: UIControlState())
-//                buyButton.setTitle("Free with App", for: UIControlState())
-                
-                // buy button title should be disabled and read Owner
-                
             } else {
-                playButton.isEnabled = false
-                buyButton.isEnabled = true
                 // display buy button
+                buyButton.setTitle("Buy", for: UIControlState())
+                // figure out more logic
             }
         }
+        
+        
     }
-    @IBAction func playButtonTapped(_ sender: UIBarButtonItem) {
-        if deck != nil {
-//            performSegue(withIdentifier: "selectPlaylistSegue", sender: self)
-            self.dismiss(animated: true, completion: {action in
-                let presentingVC = self.presentingViewController as! DeckViewController
-                presentingVC.showPlaylistVC()
-            })
-        }
+
+    func backButtonTapped() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     func buyButtonTapped() {
         if buyButton.title(for: UIControlState()) == "Play" {
             self.dismiss(animated: true, completion: nil)
-            delegate?.showPlaylistVC()
+            delegate?.playGame()
         } else {
             //handle purchasing a deck
         }
     }
     
         
-    func newBuyButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.titleLabel?.textAlignment = .center
-        button.setTitle("Buy", for: UIControlState())
-        button.addTarget(self, action: #selector(ProductCollectionViewCell.buyButtonTapped(_:)), for: .touchUpInside)
-        button.layer.frame = CGRect(x: 0, y: 0, width: 120, height: 50)
-        
-        return button
-    }
+//    func newBuyButton() -> UIButton {
+//        let button = UIButton(type: .system)
+//        button.setTitleColor(UIColor.white, for: .normal)
+//        button.titleLabel?.textAlignment = .center
+//        button.setTitle("Buy", for: UIControlState())
+//        button.addTarget(self, action: #selector(ProductCollectionViewCell.buyButtonTapped(_:)), for: .touchUpInside)
+//        button.layer.frame = CGRect(x: 0, y: 0, width: 120, height: 50)
+//        
+//        return button
+//    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "selectPlaylistSegue" {
-            let destVC = segue.destination as! PlaylistsViewController
-            destVC.deck = deck
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if segue.identifier == "selectPlaylistSegue" {
+//            let destVC = segue.destination as! PlaylistsViewController
+//            destVC.deck = deck
+//        }
+//    }
 
 
 }

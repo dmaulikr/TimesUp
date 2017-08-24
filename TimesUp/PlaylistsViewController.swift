@@ -15,10 +15,10 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var playListTableView: UITableView!
     
     // MARK: Properties
+    var delegate: SongsVCDelegate? // used to pass data from deckVC to songVC
     var playlists: [Playlist] = [Playlist]()
     var songs: [DeviceSong] = [DeviceSong]()
-    var deck: Deck? // change from string after you create the class and figure out in app purchases
-    
+        
     let managedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     // make this global so that I can make it appear and disappear.
@@ -135,8 +135,12 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
             let destVC = segue.destination as! SongsViewController
             if let indexPath = playListTableView.indexPathForSelectedRow {
                 destVC.playlist = playlists[indexPath.row]
-                destVC.deck = deck
+                destVC.delegate = self.delegate // pass the delegate from deckVC all the way to songsVC
             }
+        }
+        if segue.identifier == "newPlaylistSegue" {
+            let destVC = segue.destination as! SongsViewController
+            destVC.delegate = self.delegate // pass the delegate from deckVC all the way to songsVC
         }
 
     }

@@ -20,7 +20,6 @@ class GameViewController: UIViewController {
     @IBOutlet weak var artistLabel: UILabel!
     @IBOutlet weak var songTitleLabel: UILabel!
     @IBOutlet weak var nowPlayingView: UIView!
-    @IBOutlet weak var endGameButton: UIBarButtonItem!
     @IBOutlet weak var skipTopicButton: UIButton!
     
     // MARK: properties
@@ -216,8 +215,8 @@ class GameViewController: UIViewController {
     
     func getRandomNumberAndStartTimer() {
         // get a random number between 0 and 10
-//        randomEndTime = Int(arc4random_uniform(30)) + 30 // use for actual game
-        randomEndTime = Int(arc4random_uniform(30))
+        randomEndTime = Int(arc4random_uniform(30)) + 30 // use for actual game
+//        randomEndTime = Int(arc4random_uniform(30))
 //        randomEndTime = Int(arc4random_uniform(10)) // use for testing
         print(randomEndTime)
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimeLabel), userInfo: nil, repeats: true)
@@ -262,9 +261,6 @@ class GameViewController: UIViewController {
         }
     }
     
-    @IBAction func endGameTapped(_ sender: UIBarButtonItem) {
-        navigationController?.popToRootViewController(animated: true)
-    }
     
     var penaltyTimer: Timer?
     var penaltyCountdown = 5
